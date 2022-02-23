@@ -38,6 +38,7 @@ function App() {
       <Total total={exercises1 + exercises2 + exercises3} />
     </div>
   )
+  
 }
 
 export default App
