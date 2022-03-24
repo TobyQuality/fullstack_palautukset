@@ -1,13 +1,6 @@
 import Content from './Content'
 import Header from './Header'
-
-const Total = ({parts}) => {
-    let totalNumberOfExercises = 0
-    parts.map((part) => 
-        totalNumberOfExercises += part.exercises 
-    )
-    return (<h3>total of {totalNumberOfExercises} exercises</h3>)
-}
+import Total from './Total'
 
 const Course = ({ course }) => {
     return(
