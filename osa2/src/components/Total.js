@@ -1,7 +1,7 @@
 const Total = ( {parts }) => {
     
     const total = parts.reduce((sum, part) => {
-        console.log('Iteration:', sum, part)
+        //console.log('Iteration:', sum, part)
         return sum + part.exercises 
     }, 0)
 
