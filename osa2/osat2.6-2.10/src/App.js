@@ -13,8 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-
-  //käärin tähän muuttujaan propseina välitettävät arvot, joita tarvitaan PersonForm-komponentissa
+  //käärin alla olevaan muuttujaan propseina välitettävät arvot, joita tarvitaan PersonForm-komponentissa
   const propslist = {persons, setPersons, newName, setNewName, newNumber, setNewNumber}
 
   return (
