@@ -1,1 +1,1 @@
-Front end for a simple phonebook app
+Front end for a phonebook app
