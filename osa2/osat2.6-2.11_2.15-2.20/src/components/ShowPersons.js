@@ -1,6 +1,6 @@
 import contactService from '../services/contacts'
 //saa App-tasolta propsina puhelinluettelon listan persons ja filtteröintiä varten merkkijonon newFilter
-const ShowPersons = ({ persons, setPersons, newFilter }) => {
+const ShowPersons = ({ persons, setPersons, newFilter, setMessage, message }) => {
     const filteredList = persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
     //console.log(filteredList.length)
     const handleDelete = (id, name) => {
@@ -8,22 +8,24 @@ const ShowPersons = ({ persons, setPersons, newFilter }) => {
         contactService.deleteContact(id)
         .then(response => {
           //console.log(response)
+          setMessage({...message, msg: `'${name}' was succesfully deleted`})
+          setTimeout(() => {setMessage({...message, msg: ''})}, 5000)
           const newList = persons.filter(person => person.id !== id)
           setPersons(newList)
         })
         .catch(error => {
           console.log(error)
+          setMessage({msg: `Information of '${name}' has already been removed`, colorCode: 'red'})
+          setTimeout(() => {setMessage({msg: '', colorCode: 'green'})}, 5000)
         })
       }
     }
-
-    const style = {display: "inline-block"}
 
     return (
       <div>
         {filteredList.map(person => 
           <div key={person.id}>
-            <p style={style}>{person.name} {person.number}</p>
+            <p style={ {display: "inline-block"} }>{person.name} {person.number}</p>
             <button onClick={() => {handleDelete(person.id, person.name)}}>delete</button>
           </div>
         )}

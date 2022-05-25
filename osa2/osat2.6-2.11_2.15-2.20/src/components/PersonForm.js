@@ -2,7 +2,7 @@ import contactService from '../services/contacts'
 
 const PersonForm = ({propslist}) => {
 
-  const {persons, setPersons, newName, setNewName, newNumber, setNewNumber} = propslist
+  const {persons, setPersons, newName, setNewName, newNumber, setNewNumber, setMessage, message} = propslist
     //funktio lomakkeen submittausta varten
     const submitName = (e) => {
         e.preventDefault()
@@ -13,24 +13,34 @@ const PersonForm = ({propslist}) => {
           contactService
             .create(person)
               .then(returnedPerson => {
+                setMessage({...message, msg: `'${returnedPerson.name}' was succesfully added to the list`})
+                setTimeout(() => { setMessage({...message, msg: ''}) }, 5000)
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('')
               })
               .catch(error => {
                 console.log(error)
+                setMessage({msg: `'${person.name}' has already been added`, colorCode: 'red'})
+                setTimeout(() => {setMessage({msg: '', colorCode: 'green'})}, 5000)
               })
         }
         else {
           if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
             const changedPerson = { ...found, number : newNumber}
             contactService.update(found.id, changedPerson).then(response => {
-                console.log(response)
+                //console.log(response)
+                setMessage({ ...message, msg: `The number of '${changedPerson.name}' was succesfully updated` })
+                setTimeout(() => { setMessage( {...message, msg: ''} ) }, 5000)
                 setPersons(persons.map(person => person.id !== found.id ? person : changedPerson))
                 setNewName('')
                 setNewNumber('')
               })
-              .catch(error => console.log(error))
+              .catch(error => {
+                console.log(error)
+                setMessage({msg: `Updating failed unexpectedly, please try again`, colorCode: 'red'})
+                setTimeout(() => {setMessage({msg: '', colorCode: 'green'})}, 5000)
+              })
           }
         }
         //console.log(persons)
