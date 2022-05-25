@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import ShowPersons from './components/ShowPersons'
+import contactService from './services/contacts'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,12 +12,12 @@ const App = () => {
 
   //ensimmäisen renderöinnin yhteydessä ladataan json-serveriltä henkilölista
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => response.data)
-    .then(data => setPersons(data))
+    contactService
+      .getAll()
+      .then(initialContacts => setPersons(initialContacts))
+      .catch(error => console.log(error))
   }, [])
   //console.log(persons)
-
   //käärin alla olevaan muuttujaan propseina välitettävät arvot, joita tarvitaan PersonForm-komponentissa
   const propslist = {persons, setPersons, newName, setNewName, newNumber, setNewNumber}
 
@@ -28,7 +28,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm propslist={propslist} />
       <h2>Numbers</h2>
-      <ShowPersons persons={persons} newFilter={newFilter} />
+      <ShowPersons persons={persons} setPersons={setPersons} newFilter={newFilter} />
     </div>
   )
 
