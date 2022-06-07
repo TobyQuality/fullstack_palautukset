@@ -11,7 +11,7 @@ const ShowCountries = ({propsList}) => {
   const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(filterString.toLowerCase()))
   //console.log(countries); //console.log(filterCountries); //console.log(filterCountries.length)
   
-  //The individual api key will be given in Shell when starting the app via NPM 
+  //The individual api key is given in shell console when starting the app via NPM
   //Needed to fetch weather info from OpenWeather.org
   const api_key = process.env.REACT_APP_API_KEY
 
