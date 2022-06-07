@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 //Component for showing countries/country on App, depending on what's written in the filter field
-//If 10 or less and more than 1 results, a list of countries is shown along with buttons that show details about said countries
+//If 10 or less and more than 1 results, a list of countries is shown along with buttons that, when clicked, open up details about the listed countries
 const ShowCountries = ({propsList}) => {
   const {countries, filterString, setFilterString, capital, setCapital, weather, setWeather} = propsList
 
