@@ -1,5 +1,4 @@
 const Notification = ( {message} ) => {
-    //colorCode either has 'green' (the default value) or 'red' value as parameter
     const colorCode = message.colorCode
     const messageStyle = (colorCode) => {
         let notificationStyling = {
@@ -26,6 +25,7 @@ const Notification = ( {message} ) => {
     if (message.msg.length === 0) {
         return null
     }
+    
     return(
         <div style={messageStyle(colorCode)}>
             {message.msg}

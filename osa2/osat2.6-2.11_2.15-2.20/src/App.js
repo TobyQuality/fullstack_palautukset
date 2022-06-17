@@ -12,15 +12,12 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [message, setMessage] = useState({msg: '', colorCode: 'green'})
 
-  //ensimmäisen renderöinnin yhteydessä ladataan json-serveriltä henkilölista
   useEffect(() => {
     contactService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
       .catch(error => console.log(error))
   }, [])
-  //console.log(persons)
-  //käärin alla olevaan muuttujaan propseina välitettävät arvot, joita tarvitaan PersonForm-komponentissa
   const propslist = {persons, setPersons, newName, setNewName, newNumber, setNewNumber, message, setMessage}
 
   return (
@@ -34,7 +31,6 @@ const App = () => {
       <ShowPersons persons={persons} setPersons={setPersons} newFilter={newFilter} setMessage={setMessage} message={message} />
     </div>
   )
-
 }
 
 export default App
