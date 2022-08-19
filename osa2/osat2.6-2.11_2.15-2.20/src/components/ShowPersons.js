@@ -1,13 +1,10 @@
 import contactService from '../services/contacts'
-//saa App-tasolta propsina puhelinluettelon listan persons ja filtteröintiä varten merkkijonon newFilter
 const ShowPersons = ({ persons, setPersons, newFilter, setMessage, message }) => {
-    const filteredList = persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
-    //console.log(filteredList.length)
+  const filteredList = persons.filter(person => person.name?.toLowerCase().includes(newFilter?.toLowerCase()))
     const handleDelete = (id, name) => {
       if (window.confirm("Delete " + name + "?")) {
         contactService.deleteContact(id)
         .then(response => {
-          //console.log(response)
           setMessage({...message, msg: `'${name}' was succesfully deleted`})
           setTimeout(() => {setMessage({...message, msg: ''})}, 5000)
           const newList = persons.filter(person => person.id !== id)
