@@ -18,6 +18,7 @@ const App = () => {
       .then(initialPersons => setPersons(initialPersons))
       .catch(error => console.log(error))
   }, [])
+  
   const propslist = {persons, setPersons, newName, setNewName, newNumber, setNewNumber, message, setMessage}
 
   return (
@@ -31,6 +32,7 @@ const App = () => {
       <ShowPersons persons={persons} setPersons={setPersons} newFilter={newFilter} setMessage={setMessage} message={message} />
     </div>
   )
+
 }
 
 export default App
