@@ -25,6 +25,7 @@ const Notification = ( {message} ) => {
     if (message.msg.length === 0) {
         return null
     }
+    
     return(
         <div style={messageStyle(colorCode)}>
             {message.msg}

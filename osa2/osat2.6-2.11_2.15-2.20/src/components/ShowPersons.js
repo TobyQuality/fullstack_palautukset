@@ -1,6 +1,7 @@
 import contactService from '../services/contacts'
+
 const ShowPersons = ({ persons, setPersons, newFilter, setMessage, message }) => {
-  const filteredList = persons.filter(person => person.name?.toLowerCase().includes(newFilter?.toLowerCase()))
+    const filteredList = persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
     const handleDelete = (id, name) => {
       if (window.confirm("Delete " + name + "?")) {
         contactService.deleteContact(id)
