@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 //Component for showing countries/country on App, depending on what's written in the filter field
-//If 10 or less and more than 1 results, a list of countries is shown along with buttons that show details about said countries
+//If 10 or less and more than 1 results, a list of countries is shown along with buttons that, when clicked, open up details about the listed countries
 const ShowCountries = ({propsList}) => {
   const {countries, filterString, setFilterString, capital, setCapital, weather, setWeather} = propsList
 
@@ -11,7 +11,7 @@ const ShowCountries = ({propsList}) => {
   const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(filterString.toLowerCase()))
   //console.log(countries); //console.log(filterCountries); //console.log(filterCountries.length)
   
-  //The individual api key will be given in Shell when starting the app via NPM 
+  //The individual api key is given in shell console when starting the app via NPM
   //Needed to fetch weather info from OpenWeather.org
   const api_key = process.env.REACT_APP_API_KEY
 
