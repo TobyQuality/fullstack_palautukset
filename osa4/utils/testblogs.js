@@ -5,6 +5,7 @@ const blogs = [
       author: "Michael Chan",
       url: "https://reactpatterns.com/",
       likes: 7,
+      user: "63b2f8c760b9baff24d73439",
       __v: 0
     },
     {
@@ -13,6 +14,7 @@ const blogs = [
       author: "Edsger W. Dijkstra",
       url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
       likes: 5,
+      user: "63b2f8c760b9baff24d73439",
       __v: 0
     },
     {

@@ -1,11 +1,15 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const { request } = require('../app')
 const app = require('../app')
 
 const api = supertest(app)
 
 const Blog = require('../models/blog')
-const testblogs = require('./testblogs')
+const testblogs = require('../utils/testblogs')
+
+//the following link helped greatly to implement the token extraction:
+//https://stackoverflow.com/questions/70899481/get-and-store-token-globally-for-tests-in-supertest
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -15,7 +19,7 @@ beforeEach(async () => {
 describe('general tests', () => {
 
   test('there are six blogs in total', async () => {
-    const response = await blogsInDb()
+    response = await api.get('/api/blogs')
   
     expect(response.body).toHaveLength(testblogs.length)
   })
@@ -32,8 +36,33 @@ describe('general tests', () => {
 })
 
 describe('adding new blogs', () => {
+  test('blog will not be saved without an authorization header', async() => {
+    const testBlog = {
+      title: "It's good to test",
+      author: "Test Dude",
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    }
+  
+      await api
+      .post('/api/blogs')
+      .set('Authorization', 'bearer ')
+      .send(testBlog)
+      .expect(401)
+  })
 
+  //the next tests need authorization token
+  let token = ''
+  beforeEach(async () => {
+      const response = await api.post('/api/login').send({
+          username: 'test',
+          password: 'Johnson',
+      })
+      //console.log(response)
+      token = response.body.token
+      //console.log(token)
+  })
   test('post method works properly', async() => {
+
     const testBlog = {
       title: "Test",
       author: "Testman",
@@ -43,6 +72,7 @@ describe('adding new blogs', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer ' + token)
       .send(testBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -64,6 +94,7 @@ describe('adding new blogs', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer ' + token)
       .send(testBlog)
       .expect(201)
   
@@ -81,6 +112,7 @@ describe('adding new blogs', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer ' + token)
       .send(testBlog)
       .expect(400)
   })
@@ -88,6 +120,14 @@ describe('adding new blogs', () => {
 })
 
 describe('deleting blogs', () => {
+  let token = ''
+  beforeEach(async () => {
+      const response = await api.post('/api/login').send({
+          username: 'test',
+          password: 'Johnson',
+      })
+      token = response.body.token
+  })
 
   test('deleting a blog according to its id works', async() => {
     //the first blog is selected for deletion,
@@ -97,6 +137,7 @@ describe('deleting blogs', () => {
   
     await api
           .delete(`/api/blogs/${firstId}`)
+          .set('Authorization', 'bearer ' + token)
           .expect(204)
   
     const response = await api.get('/api/blogs')
@@ -108,6 +149,14 @@ describe('deleting blogs', () => {
 })
 
 describe('changing information of a blog', () => {
+  let token = ''
+  beforeEach(async () => {
+      const response = await api.post('/api/login').send({
+          username: 'test',
+          password: 'Johnson',
+      })
+      token = response.body.token
+  })
 
   test('updating the likes of a blog works', async() => {
     //the idea in this test is that whether the previous
@@ -125,6 +174,7 @@ describe('changing information of a blog', () => {
     await api
       .post('/api/blogs')
       .send(testBlog)
+      .set('Authorization', 'bearer ' + token)
       .expect(201)
   
     let response = await api.get('/api/blogs')
@@ -136,6 +186,7 @@ describe('changing information of a blog', () => {
     await api
       .put(`/api/blogs/${lastBlog.id}`)
       .send(updateLastBlog)
+      .set('Authorization', 'bearer ' + token)
       .expect(200)
   
     //lastly we need to get all the blogs one more time
