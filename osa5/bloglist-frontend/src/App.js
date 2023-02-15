@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef  } from 'react'
 import Blog from './components/Blog'
+import BlogsForm from './components/BlogsForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,6 +13,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [blog, setBlog] = useState({title: '', author: '', url: ''})
   const [message, setMessage] = useState({msg: '', colorCode: 'green'})
+  const blogFormRef = useRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -32,7 +35,6 @@ const App = () => {
     } catch (exception) {
       setMessage({msg: `wrong credentials`, colorCode: 'red'})
       setTimeout(() => {setMessage({msg: '', colorCode: 'green'})}, 5000)
-      
     }
   }
 
@@ -52,6 +54,10 @@ const App = () => {
       setMessage({...message, msg: `a new blog ${blog.title} by ${blog.author} added`})
       setTimeout(() => {setMessage({...message, msg: ''})}, 5000)
       setBlog({title: '', author: '', url: ''})
+      blogFormRef.current.toggleVisibility()
+      setTimeout(() => {blogService.getAll().then(blogs =>
+        setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+      )}, 500)
     } catch (exception) {
       setMessage({msg: `creating a new blog failed`, colorCode: 'red'})
       setTimeout(() => {setMessage({msg: '', colorCode: 'green'})}, 5000)
@@ -85,51 +91,9 @@ const App = () => {
   </div>
   )
 
-  const blogsForm = () => (
-    <div>
-      <h2>blogs</h2>
-      <p>{user.name} has logged in</p>
-      <button onClick={logout}>logout</button>
-      <h2>create new blog</h2>
-      <form onSubmit={createNewBlog}>
-        <div>
-          title:
-          <input
-          type="text"
-          value={blog.title}
-          name="title"
-          onChange={ ({ target }) => setBlog({...blog, title: target.value}) } 
-          />
-        </div>
-        <div>
-          author:
-        <input
-          type="text"
-          value={blog.author}
-          name="author"
-          onChange={ ({ target }) => setBlog({...blog, author: target.value}) } 
-          />
-        </div>
-        <div>
-          url:
-        <input
-          type="text"
-          value={blog.url}
-          name="url"
-          onChange={ ({ target }) => setBlog({...blog, url: target.value}) } 
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     )  
   }, [])
 
@@ -144,11 +108,29 @@ const App = () => {
 
   return (
     <div>
-    <Notification message={message} />
-    {user === null ?
-      loginForm() :
-      blogsForm()
-    }
+      <Notification message={message} />
+      {!user && loginForm()}
+      {user &&
+        <div>
+        <h2>blogs</h2>
+        <p>{user.name} has logged in</p>
+        <button onClick={logout}>logout</button>
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+            <BlogsForm
+              createNewBlog={createNewBlog}
+              blog = {blog}
+              setBlog = {setBlog}
+              blogs = {blogs}
+              Blog = {Blog}
+            />
+          </Togglable>
+          <div>
+            {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} user={user} blogs={blogs} setBlogs={setBlogs}/>
+            )}
+          </div>
+        </div>
+      }
     </div>
   )
 }
