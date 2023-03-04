@@ -1,7 +1,9 @@
 import {useState, useEffect} from 'react'
 import blogService from '../services/blogs'
 
-const Blog =({blog, user, setBlogs}) => {
+// the mockHandler props is used with tests, it doesn't
+// affect the normal functioning of the Blog component otherwise
+const Blog =({blog, user, setBlogs, mockHandler}) => {
   const [visible, setVisible] = useState(false)
   const [buttonName, setButtonName] = useState('view')
   const [individualBlog, setIndividualBlog] = useState(blog)
@@ -23,7 +25,7 @@ const Blog =({blog, user, setBlogs}) => {
     marginBottom: 5,
   }
 
-  const like = (event) => {
+  const likeHandler = (event) => {
     event.preventDefault()
     const changedBlog = {...individualBlog, likes: (individualBlog.likes + 1)}
     blogService.update(changedBlog, individualBlog.id)
@@ -32,6 +34,14 @@ const Blog =({blog, user, setBlogs}) => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     ) 
+  }
+
+  const like = (event) => {
+    if (mockHandler) {
+      mockHandler()
+    } else {
+      likeHandler(event)
+    }
   }
 
   const remove = (event) => {
@@ -68,12 +78,16 @@ const Blog =({blog, user, setBlogs}) => {
 
   return(
   <div style={blogStyle}>
-    {individualBlog.title} {individualBlog.author}<button onClick={toggleVisibility}>{buttonName}</button>
-    <div style={showWhenVisible}>
-      <div>{individualBlog.url}</div> 
-      <div>{individualBlog.likes} <button onClick={like}>like</button></div>
-      <div>{individualBlog.user?.username}</div>
-      <div style={showWhenAuthorized}><button onClick={remove}>remove</button></div>
+    <div id="title">{individualBlog.title}</div> 
+    <div id="author">{individualBlog.author}</div>
+    <div><button onClick={toggleVisibility} id="toggle">{buttonName}</button></div>
+    <div style={showWhenVisible} id="visibility">
+      <div id="url">{individualBlog.url}</div> 
+      <div id="likes">{individualBlog.likes} <button onClick={like}>like</button></div>
+      <div id="username">{individualBlog.user?.username}</div>
+      <div style={showWhenAuthorized}>
+        <button onClick={remove} id="remove">remove</button>
+      </div>
     </div>
   </div> 
   )
