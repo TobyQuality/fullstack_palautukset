@@ -77,16 +77,16 @@ const Blog =({blog, user, setBlogs, mockHandler}) => {
   }, [])
 
   return(
-  <div style={blogStyle}>
-    <div id="title">{individualBlog.title}</div> 
-    <div id="author">{individualBlog.author}</div>
-    <div><button onClick={toggleVisibility} id="toggle">{buttonName}</button></div>
-    <div style={showWhenVisible} id="visibility">
-      <div id="url">{individualBlog.url}</div> 
-      <div id="likes">{individualBlog.likes} <button onClick={like}>like</button></div>
-      <div id="username">{individualBlog.user?.username}</div>
+  <div style={blogStyle} id={individualBlog.title} class="blog">
+    <div>{individualBlog.title}</div> 
+    <div>{individualBlog.author}</div>
+    <div><button onClick={toggleVisibility}>{buttonName}</button></div>
+    <div style={showWhenVisible}>
+      <div>{individualBlog.url}</div> 
+      <div>{individualBlog.likes} <button onClick={like}>like</button></div>
+      <div>{individualBlog.user?.username}</div>
       <div style={showWhenAuthorized}>
-        <button onClick={remove} id="remove">remove</button>
+        <button onClick={remove}>remove</button>
       </div>
     </div>
   </div> 
