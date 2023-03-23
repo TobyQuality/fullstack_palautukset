@@ -1,0 +1,34 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+const initialState = [{
+    borderStyle: 'solid',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    visibility: 'hidden',
+  }, '']
+
+const notificationSlice = createSlice({
+    name: 'notification',
+    initialState,
+    reducers: {
+        createNotification(state, action) {
+            state[0] = {...state[0], visibility: 'visible'}
+            state[1] = 'you added ' + action.payload
+            return state
+        },
+        voteNotification(state,action) {
+            state[0] = {...state[0], visibility: 'visible'}
+            state[1] = 'you voted ' + action.payload
+            return state
+        },
+        setDefault(state, action) {
+            state[0] = {...state[0], visibility: 'hidden'}
+            state[1] = ''
+            return state
+        },
+    }
+})
+
+export const {createNotification, voteNotification, setDefault} = notificationSlice.actions
+export default notificationSlice.reducer
