@@ -10,19 +10,19 @@ const AnecdoteForm = () => {
   const dispatch = useNotificationDispatch()
 
   const newAnecdoteMutation = useMutation(createAnecdote, {
-    onSuccess: (newAnecdote) => {
-      queryClient.invalidateQueries('anecdotes')
-      dispatch('CREATE_SUCCESS')
-      // the following codes below make the app crash, so they are in comments
-      console.log(newAnecdote)
+    onSuccess: response => {
       const anecdotesLoaded = queryClient.getQueryData('anecdotes')
-      queryClient.setQueryData('anecdotes', anecdotesLoaded.concat(newAnecdote))  
-    },
-    onError: (error) => {
-      dispatch('CREATE_FAIL')
+      queryClient.setQueryData('anecdotes', anecdotesLoaded.concat(response.data))
+      dispatch({type: 'CREATE_SUCCESS', payload: response.data})
       setTimeout(() => {
-        dispatch('')
-      }, 3000)
+        dispatch({type: ''})
+      }, 5000)
+    },
+    onError: error => {
+      dispatch({type: 'CREATE_FAIL'})
+      setTimeout(() => {
+        dispatch({type: ''})
+      }, 5000)
     }
   })
 

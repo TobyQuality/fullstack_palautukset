@@ -1,17 +1,25 @@
 import { useQuery, useMutation, useQueryClient  } from 'react-query'
 
+import { useNotificationDispatch } from './NotificationContext'
 import { getAnecdotes, updateAnecdote } from './requests'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
 const App = () => {
   const queryClient = useQueryClient()
+
+  const dispatch = useNotificationDispatch()
   
   const updateAnecdoteMutation = useMutation(updateAnecdote, {
-    onSuccess: () => {
+    onSuccess: (updatedAnecdote) => {
       queryClient.invalidateQueries('anecdotes')
+      dispatch({type: 'VOTE', payload: updatedAnecdote})
+      setTimeout(() => {
+        dispatch({type: ''})
+      }, 5000)
     },
   })
+
 
   const handleVote = async (content) => {
     updateAnecdoteMutation.mutate({ ...content, 

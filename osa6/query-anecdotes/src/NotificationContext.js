@@ -11,17 +11,33 @@ const initialState = [{
 const notificationReducer = (state, action) => {
     switch (action.type) {
       case "CREATE_SUCCESS":
-        state[0] = {...state[0], visibility: 'visible'}
-        state[1] = 'you created anecdote: ' + action.payload
-        return state
+        return [{
+            ...state[0],
+            visibility: 'visible',
+          },
+          'you created anecdote: ' + action.payload.content,
+        ]
       case "CREATE_FAIL":
-        state[0] = {...state[0], visibility: 'visible'}
-        state[1] = 'too short anecdote, must have length 5 or more'
-        return state
+        return [{
+            ...state[0],
+            visibility: 'visible',
+          },
+          'too short anecdote, must have length 5 or more',
+        ]
+      case "VOTE":
+        return [{
+          ...state[0],
+          visibility: 'visible',
+        },
+        'you voted anecdote: ' + action.payload.content,
+      ]
       default:
-        state[0] = {...state[0], visibility: 'hidden'}
-        state[1] = ''
-        return state
+        return [{
+            ...state[0],
+            visibility: 'hidden',
+          },
+          '',
+        ]
     }
   }
 
