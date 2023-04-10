@@ -13,7 +13,6 @@ const notificationSlice = createSlice({
     initialState,
     reducers: {
         createNotification(state, action) {
-            console.log(action.payload)
             state[0] = {...state[0], visibility: 'visible'}
             state[1] = 'you added ' + action.payload
             return state
