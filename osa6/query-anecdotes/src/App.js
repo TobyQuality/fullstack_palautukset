@@ -20,7 +20,6 @@ const App = () => {
     },
   })
 
-
   const handleVote = async (content) => {
     updateAnecdoteMutation.mutate({ ...content, 
       "votes": content.votes + 1 })

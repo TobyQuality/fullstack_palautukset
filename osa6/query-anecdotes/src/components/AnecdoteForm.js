@@ -4,10 +4,9 @@ import { createAnecdote } from '../requests'
 import { useNotificationDispatch } from '../NotificationContext'
 
 const AnecdoteForm = () => {
+  const dispatch = useNotificationDispatch()
 
   const queryClient = useQueryClient()
-
-  const dispatch = useNotificationDispatch()
 
   const newAnecdoteMutation = useMutation(createAnecdote, {
     onSuccess: response => {

@@ -59,8 +59,8 @@ export const useNotificationValue = () => {
 }
 
 export const useNotificationDispatch = () => {
-const notificationAndDispatch = useContext(NotificationContext)
-return notificationAndDispatch[1]
+  const notificationAndDispatch = useContext(NotificationContext)
+  return notificationAndDispatch[1]
 }
 
 export default NotificationContext
