@@ -77,13 +77,4 @@ export const useNotificationDispatch = () => {
   return notificationAndDispatch[1]
 }
 
-/*
-
-    dispatch({ type: 'LOG_OUT', payload: { username: user.username } })
-    setTimeout(() => {
-      dispatch({ type: '' })
-    }, 5000)
-
-*/
-
 export default NotificationContext

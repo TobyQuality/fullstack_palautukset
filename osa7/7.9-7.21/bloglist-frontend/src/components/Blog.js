@@ -1,12 +1,12 @@
 import {useState, useEffect} from 'react'
+import { useMutation, useQueryClient} from 'react-query'
 import blogService from '../services/blogs'
 
 // the mockHandler props is used with tests, it doesn't
 // affect the normal functioning of the Blog component otherwise
-const Blog =({blog, user, setBlogs, mockHandler}) => {
+const Blog =({blog, user}) => {
   const [visible, setVisible] = useState(false)
   const [buttonName, setButtonName] = useState('view')
-  const [individualBlog, setIndividualBlog] = useState(blog)
   const [showButton, setShowButton] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -25,41 +25,35 @@ const Blog =({blog, user, setBlogs, mockHandler}) => {
     marginBottom: 5,
   }
 
-  const likeHandler = (event) => {
-    event.preventDefault()
-    const changedBlog = {...individualBlog, likes: (individualBlog.likes + 1)}
-    blogService.update(changedBlog, individualBlog.id)
-    setIndividualBlog(changedBlog)
-    
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    ) 
-  }
+  const queryClient = useQueryClient()
 
-  const like = (event) => {
-    if (mockHandler) {
-      mockHandler()
-    } else {
-      likeHandler(event)
+  const updateBlogMutation = useMutation(blogService.update, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
     }
+  })
+  const handleVote = (blog) => {
+    updateBlogMutation.mutate({ ...blog, "likes": blog.likes + 1 })
   }
 
+  const removeBlogMutation = useMutation(blogService.remove, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    }
+  })
+  const handleRemove = (id) => {
+    removeBlogMutation.mutate( id )
+  }
   const remove = (event) => {
     event.preventDefault()
-    
-    if (user.id === individualBlog.user.id) {
-      if (window.confirm(`Remove blog ${individualBlog.title} by ${individualBlog.author}`)) {
-        blogService.remove(individualBlog.id)
-
-        setTimeout(() => {blogService.getAll().then(blogs =>
-          setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-        )}, 500)
+    if (user.id === blog.user.id) {
+      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+        handleRemove(blog.id)
       }
     } else {
       window.alert(`You are not authorized to delete other peoples' blogs`)
     }
   }
-
 
   useEffect(() => {
     // in the first render it is important to note
@@ -77,14 +71,14 @@ const Blog =({blog, user, setBlogs, mockHandler}) => {
   }, [])
 
   return(
-  <div style={blogStyle} id={individualBlog.title} class="blog">
-    <div>{individualBlog.title}</div> 
-    <div>{individualBlog.author}</div>
+  <div style={blogStyle} id={blog.title} name="blog" value={blog} class="blog">
+    <div>{blog.title}</div> 
+    <div>{blog.author}</div>
     <div><button onClick={toggleVisibility}>{buttonName}</button></div>
     <div style={showWhenVisible}>
-      <div>{individualBlog.url}</div> 
-      <div>{individualBlog.likes} <button onClick={like}>like</button></div>
-      <div>{individualBlog.user?.username}</div>
+      <div>{blog.url}</div>
+      <div>{blog.likes} <button onClick={() => {handleVote(blog)}}>like</button></div>
+      <div>{blog.user?.username}</div>
       <div style={showWhenAuthorized}>
         <button onClick={remove}>remove</button>
       </div>
