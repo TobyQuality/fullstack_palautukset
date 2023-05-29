@@ -43,7 +43,7 @@ const notificationReducer = (state, action) => {
       ...state[0],
       visibility: 'visible',
     },
-    action.payload.username +  ' has logged out successfully',
+    'Logged out successfully',
     ]
   default:
     return [{
@@ -61,7 +61,7 @@ export const NotificationContextProvider = (props) => {
   const [notification, notificationDispatch] = useReducer(notificationReducer, initialState)
 
   return (
-    <NotificationContext.Provider value={[notification, notificationDispatch] }>
+    <NotificationContext.Provider value={ [notification, notificationDispatch] }>
       {props.children}
     </NotificationContext.Provider>
   )
