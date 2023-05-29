@@ -35,10 +35,10 @@ const App = () => {
   return (
     <div>
       <Notification/>
-      {loginValue === null &&
+      {!loginValue &&
         <LoginForm></LoginForm>
       }
-      {loginValue != null &&
+      {loginValue &&
         <div>
           <h2>blogs</h2>
           <p>{loginValue.username} has logged in</p>
