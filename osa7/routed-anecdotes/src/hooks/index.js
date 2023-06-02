@@ -20,7 +20,6 @@ export const useField = (type) => {
   }
 }
 
-// moduulissa voi olla monta nimettyä eksportia
 export const useAnotherHook = () => {  
     useField()
 }
