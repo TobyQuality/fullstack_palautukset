@@ -1,30 +1,14 @@
 import {useState, useEffect} from 'react'
-import { useMutation, useQueryClient} from 'react-query'
+import { useMutation, useQueryClient, useQuery} from 'react-query'
 import blogService from '../services/blogs'
+import commentService from '../services/comments'
 import { useLoginValue } from '../LoginContext'
 
 const Blog =({blog}) => {
   const loginValue = useLoginValue()
 
-  const [visible, setVisible] = useState(false)
-  const [buttonName, setButtonName] = useState('view')
   const [showButton, setShowButton] = useState(false)
-
-  const showWhenVisible = { display: visible ? '' : 'none' }
   const showWhenAuthorized =  { display: showButton ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-    visible ? setButtonName('view') : setButtonName('hide')
-  }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
 
   const queryClient = useQueryClient()
 
@@ -56,6 +40,29 @@ const Blog =({blog}) => {
     }
   }
 
+  const postCommentMutation = useMutation(commentService.postComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('comments')
+    }
+  })
+  const postComment= (event) => {
+    event.preventDefault()
+    const newComment = {
+      blogId: blog.id,
+      comment: event.target.comment.value
+    }
+    postCommentMutation.mutate({...newComment})
+    event.target.comment.value = ""
+  }
+
+  const result = useQuery('comments', commentService.getComments,
+  { refetchOnWindowFocus: false },
+  { retry: 1 }
+)
+const comments = result.isSuccess 
+  ? [].concat(result.data).filter(comment => comment.blogId === blog?.id)
+  : []
+
   useEffect(() => {
     if (loginValue.id === blog?.user?.id) {
       setShowButton(true)
@@ -63,18 +70,24 @@ const Blog =({blog}) => {
   }, [])
 
   return(
-  <div style={blogStyle} id={blog.title} name="blog" value={blog} class="blog">
-    <div>{blog.title}</div> 
-    <div>{blog.author}</div>
-    <div><button onClick={toggleVisibility}>{buttonName}</button></div>
-    <div style={showWhenVisible}>
-      <div>{blog.url}</div>
-      <div>{blog.likes} <button onClick={() => {handleVote(blog)}}>like</button></div>
-      <div>{blog.user?.username}</div>
-      <div style={showWhenAuthorized}>
-        <button onClick={remove}>remove</button>
-      </div>
+  <div id={blog.id} name="blog" value={blog} class="blog">
+    <h2>{blog.title} {blog.author}</h2>
+    <a href={blog.url}>{blog.url}</a>
+    <div>{blog.likes} <button onClick={() => {handleVote(blog)}}>like</button></div>
+    <p>added by {blog.user?.username}</p>
+    <div style={showWhenAuthorized}>
+      <button onClick={remove}>remove</button>
     </div>
+    <h3>comments</h3>
+    <form onSubmit={postComment}>
+      <input type='text' name="comment" id="comment"></input>
+      <button type="submit">post comment</button>
+    </form>
+    <ul>
+      {comments?.map(comment => {
+        return <li key={comment.id}>{comment.comment}</li>
+      })}
+    </ul>
   </div> 
   )
 }

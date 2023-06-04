@@ -14,11 +14,9 @@ const newBlogMutation = useMutation(blogService.create, {
     queryClient.setQueryData('blogs', previousBlogs.concat(response))
   }
 })
-
 const setBlogs = (newBlog) => {
   newBlogMutation.mutate({ ...newBlog })
 }
-
 const createNewBlog = async (event) => {
   event.preventDefault()
   try {
@@ -35,10 +33,6 @@ const createNewBlog = async (event) => {
     setTimeout(() => {
       dispatch({ type: '' })
     }, 5000)
-    blogFormRef.current.toggleVisibility()
-    setTimeout(() => {blogService.getAll().then(blogs =>
-      blogs.sort((a, b) => b.likes - a.likes)
-    )}, 500)
   } catch (exception) {
     dispatch({ type: 'CREATE_FAIL' })
     setTimeout(() => {
