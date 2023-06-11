@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient} from 'react-query'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../NotificationContext'
+import { Button, TextField } from '@mui/material'
 
 const BlogsForm = () => {
-
 const dispatch = useNotificationDispatch()
 
 const queryClient = useQueryClient()
@@ -45,31 +45,18 @@ const createNewBlog = async (event) => {
     <div>
       <h2>create new blog</h2>
       <form onSubmit={createNewBlog}>
-        <div>
-            title:
-          <input
-            type="text"
-            id="title"
-            name="title"
-          />
-        </div>
-        <div>
-            author:
-          <input
-            type="text"
-            id="author"
-            name="author"
-          />
-        </div>
-        <div>
-            url:
-          <input
-            type="text"
-            id="url"
-            name="url"
-          />
-        </div>
-        <button type="submit" id="create">create</button>
+      <div>
+        <TextField label="title" id="title" name="title"/>
+      </div>
+      <div>
+        <TextField label="author" id="author" name="author"/>
+      </div>
+      <div>
+        <TextField label="url" id="url" name="url"/>
+      </div>
+      <Button variant="contained" color="primary" type="submit">
+          Create
+      </Button>
       </form>
     </div>
   )

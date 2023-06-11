@@ -1,55 +1,31 @@
 import { createContext, useReducer, useContext } from 'react'
 
-const initialState = [{
-  borderStyle: 'solid',
-  padding: 10,
-  borderWidth: 1,
-  borderRadius: 5,
-  visibility: 'hidden',
-}, '']
+const initialState = ['', '']
 
 const notificationReducer = (state, action) => {
   switch (action.type) {
   case 'CREATE_SUCCESS':
-    return [{
-      ...state[0],
-      visibility: 'visible',
-    },
+    return ['success',
     'New blog ' + action.payload.title + ' by ' + action.payload.author + ' created.',
     ]
   case 'CREATE_FAIL':
-    return [{
-      ...state[0],
-      visibility: 'visible',
-    },
+    return ['error',
     'creating new blog failed',
     ]
   case 'LOG_IN_SUCCESS':
-    return [{
-      ...state[0],
-      visibility: 'visible',
-    },
+    return ['success',
     action.payload.username +  ' has logged in successfully',
     ]
   case 'LOG_IN_FAIL':
-    return [{
-      ...state[0],
-      visibility: 'visible',
-    },
+    return ['error',
     'wrong credentials',
     ]
   case 'LOG_OUT':
-    return [{
-      ...state[0],
-      visibility: 'visible',
-    },
+    return ['success',
     'Logged out successfully',
     ]
   default:
-    return [{
-      ...state[0],
-      visibility: 'hidden',
-    },
+    return ['',
     '',
     ]
   }

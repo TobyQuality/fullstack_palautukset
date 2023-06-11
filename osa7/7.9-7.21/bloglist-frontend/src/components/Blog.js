@@ -3,6 +3,7 @@ import { useMutation, useQueryClient, useQuery} from 'react-query'
 import blogService from '../services/blogs'
 import commentService from '../services/comments'
 import { useLoginValue } from '../LoginContext'
+import { List, ListItem, ListItemText, Button, TextField } from '@mui/material'
 
 const Blog =({blog}) => {
   const loginValue = useLoginValue()
@@ -73,22 +74,37 @@ const comments = result.isSuccess
   <div id={blog.id} name="blog" value={blog} class="blog">
     <h2>{blog.title} {blog.author}</h2>
     <a href={blog.url}>{blog.url}</a>
-    <div>{blog.likes} <button onClick={() => {handleVote(blog)}}>like</button></div>
+    <div>{blog.likes} 
+      <Button variant="contained" size="small" color="primary" onClick={() => {handleVote(blog)}}>like
+      </Button>
+    </div>
     <p>added by {blog.user?.username}</p>
     <div style={showWhenAuthorized}>
-      <button onClick={remove}>remove</button>
+    <Button variant="contained" 
+      color="secondary" 
+      type="submit" 
+      onClick={remove}>
+        remove
+    </Button>
     </div>
     <h3>comments</h3>
     <form onSubmit={postComment}>
-      <input type='text' name="comment" id="comment"></input>
-      <button type="submit">post comment</button>
+      <TextField label="comment" id="comment" name="comment"/>
+      <div>
+      <Button variant="contained" size="small" color="primary" type="submit">
+        post comment
+      </Button>
+      </div>
     </form>
-    <ul>
-      {comments?.map(comment => {
-        return <li key={comment.id}>{comment.comment}</li>
-      })}
-    </ul>
-  </div> 
+    <List>
+      {comments?.map(comment =>
+              <ListItem disablePadding key={comment.id}>
+                <ListItemText primary={comment.comment}>
+                </ListItemText>
+              </ListItem>
+      )}
+    </List>
+  </div>
   )
 }
 

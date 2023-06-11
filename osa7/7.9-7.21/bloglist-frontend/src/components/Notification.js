@@ -1,12 +1,13 @@
 import { useNotificationValue } from '../NotificationContext'
+import { Alert } from '@mui/material'
 
 const Notification = () => {
   const notificationState = useNotificationValue()
 
   return (
-    <div style={notificationState[0]}>
-      {notificationState[1]}
-    </div>
+    <Alert severity={notificationState[0]}>
+      {notificationState[1]}    
+    </Alert>
   )
 }
 

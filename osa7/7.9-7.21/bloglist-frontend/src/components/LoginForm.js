@@ -2,6 +2,7 @@ import blogService from '../services/blogs'
 import loginService from '../services/login'
 import { useNotificationDispatch } from '../NotificationContext'
 import { useLoginDispatch } from '../LoginContext'
+import { Button, TextField } from '@mui/material'
 
 const LoginForm = () => {
   const dispatchNotification = useNotificationDispatch()
@@ -43,22 +44,14 @@ const LoginForm = () => {
       <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
-          username
-          <input
-            type="text"
-            id="username"
-            name="username"
-          />
+          <TextField label="username" id="username" name="username"/>
         </div>
         <div>
-          password
-          <input
-            type="password"
-            id="password"
-            name="password"
-          />
+          <TextField label="password" type='password' id="password" name="password"/>
         </div>
-        <button type="submit" id="login-button">login</button>
+        <Button variant="contained" color="primary" type="submit">
+            login
+        </Button>
       </form>
     </div>
   )

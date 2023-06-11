@@ -10,6 +10,19 @@ import UsersList from './components/UsersList'
 import { useLoginValue, useLoginDispatch } from './LoginContext'
 import { useNotificationDispatch } from './NotificationContext'
 import { Link, Routes, Route, useMatch } from "react-router-dom"
+import {
+  Button,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+} from '@mui/material'
 
 const App = () => {
   const loginValue = useLoginValue()
@@ -51,49 +64,57 @@ const App = () => {
     : null
 
   const MainView = () => {
-    const blogStyle = {
-      paddingTop: 10,
-      paddingLeft: 2,
-      border: 'solid',
-      borderWidth: 1,
-      marginBottom: 5,
-    }
     return (
-      <div>
+    <div>
     {loginValue &&
-      <div>
-        <BlogsForm/>
-        <div>
+      <BlogsForm/>}
+    {loginValue &&
+      <TableContainer component={Paper}>
+      <Table>
+      <TableBody>
           {
           isSuccess &&
           sortedBlogs.map(b =>
-            <Link to={`/blogs/${b.id}`}>
-              <div style={blogStyle}><a href="">{b.title} {b.author}</a></div>
-            </Link>)
+            <TableRow key={b.id}>
+              <TableCell>
+              <Link to={`/blogs/${b.id}`}>{b.title}</Link>
+              </TableCell>
+              <TableCell>
+              {b.author}
+              </TableCell>
+            </TableRow>)
           }
-        </div>
-      </div>
+      </TableBody>
+      </Table>
+      </TableContainer>
     }
   </div>
     )
   }
 
   return (
+    <Container>
     <div>
       <Notification />
       {!loginValue &&
         <LoginForm />
       }
       {loginValue &&
-      <div>
-        <div>
-           <Link style={{padding: '2px'}} to="/users">users</Link>
-           <Link style={{padding: '2px'}} to="/blogs">blogs</Link>
-        </div>
-        <h2>Blogs</h2>
-        <p>{loginValue.username} has logged in</p>
-        <button onClick={logout}>logout</button>
-      </div> 
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" color="inherit" aria-label="menu">
+          </IconButton>
+          <Button color="inherit" component={Link} to="/">
+            Home
+          </Button>
+          <Button color="inherit" component={Link} to="/users">
+            Users
+          </Button>
+          <Button onClick={logout} color="inherit">
+            Log out
+          </Button>
+        </Toolbar>
+      </AppBar>
       }
       <Routes>
         <Route path="/" element={<MainView/>}></Route>
@@ -103,6 +124,7 @@ const App = () => {
         <Route path="/users/:id" element={<User user={user} />}></Route>
       </Routes>
     </div>
+    </Container>
   )
 }
 
