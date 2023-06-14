@@ -10,19 +10,8 @@ import UsersList from './components/UsersList'
 import { useLoginValue, useLoginDispatch } from './LoginContext'
 import { useNotificationDispatch } from './NotificationContext'
 import { Link, Routes, Route, useMatch } from "react-router-dom"
-import {
-  Button,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
-} from '@mui/material'
+import {Button, AppBar, Toolbar, IconButton, Container, Table, TableBody,
+  TableCell, TableContainer, TableRow, Paper } from '@mui/material'
 
 const App = () => {
   const loginValue = useLoginValue()
